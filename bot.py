@@ -1,7 +1,9 @@
 import json
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
+import os
 
+TOKEN = os.environ.get("TOKEN")
 # Завантажуємо дані один раз
 with open("all_topics.json", "r", encoding="utf-8") as f:
     topics = json.load(f)
@@ -46,7 +48,6 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 if __name__ == "__main__":
-    TOKEN = "7797083039:AAEkYBdtHv8jlo4DPUGgFZlS6TfqoaCPZPw"
 
     app = ApplicationBuilder().token(TOKEN).build()
 
