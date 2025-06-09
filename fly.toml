@@ -6,11 +6,10 @@ primary_region = 'otp'
 [build]
 
 [http_service]
-  internal_port = 8080          # Port your app listens on
-  force_https = true            # Enforces HTTPS
-  auto_stop_machines = false    # Prevent Fly from auto-stopping your app
-  auto_start_machines = true    # Let Fly auto-start the app when needed
-  min_machines_running = 1      # Ensure one machine is always running
+  internal_port = 8080          
+  auto_stop_machines = false    
+  auto_start_machines = true   
+  min_machines_running = 1   
   processes = ['app']
 
 [[vm]]
