@@ -1,12 +1,14 @@
 import json
-import os
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
+import os
 
+TOKEN = os.environ.get("TOKEN")
 # Завантажуємо дані один раз
 with open("all_topics.json", "r", encoding="utf-8") as f:
     topics = json.load(f)
 
+# Пояснення символів, які можуть бути у формулах (поставити на початок відповіді, якщо є формули)
 FORMULA_SYMBOLS_EXPLANATION = (
     "Пояснення символів у формулах:\n"
     "∑ — знак суми\n"
@@ -30,6 +32,7 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             if "content" in topic:
                 response_parts.append(topic["content"])
             if "formulas" in topic and topic["formulas"].strip():
+                # Додаємо пояснення символів, а потім формули
                 response_parts.insert(1, FORMULA_SYMBOLS_EXPLANATION)
                 response_parts.append("Формули:\n" + topic["formulas"])
 
@@ -45,18 +48,10 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 if __name__ == "__main__":
-    TOKEN = os.getenv("TOKEN")
-    WEBHOOK_HOST = os.getenv("WEBHOOK_HOST")
-    PORT = int(os.getenv("PORT", 8080))
 
-    app = ApplicationBuilder().token(TOKEN).webhook(
-        listen="0.0.0.0",
-        port=PORT,
-        url_path=TOKEN,
-        webhook_url=f"{WEBHOOK_HOST}/{TOKEN}"
-    ).build()
+    app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message_handler))
 
-    print("Bot started with webhook")
-    app.run_webhook()
+    print("Bot started")
+    app.run_polling
